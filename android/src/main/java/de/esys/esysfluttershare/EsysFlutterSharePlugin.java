@@ -76,6 +76,8 @@ public class EsysFlutterSharePlugin implements MethodCallHandler, FlutterPlugin,
 
         if (_registrar != null) {
             activeContext = _registrar.activeContext();
+        } else if (_binding != null){
+            activeContext = _binding.getApplicationContext();
         }
 
 
@@ -102,6 +104,8 @@ public class EsysFlutterSharePlugin implements MethodCallHandler, FlutterPlugin,
 
         if (_registrar != null) {
             activeContext = _registrar.activeContext();
+        } else if (_binding != null){
+            activeContext = _binding.getApplicationContext();
         }
 
 
@@ -134,6 +138,8 @@ public class EsysFlutterSharePlugin implements MethodCallHandler, FlutterPlugin,
 
         if (_registrar != null) {
             activeContext = _registrar.activeContext();
+        } else if (_binding != null){
+            activeContext = _binding.getApplicationContext();
         }
 
 
