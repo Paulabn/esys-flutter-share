@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -20,13 +22,18 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 /**
  * EsysFlutterSharePlugin
  */
-public class EsysFlutterSharePlugin implements MethodCallHandler {
+public class EsysFlutterSharePlugin implements MethodCallHandler, FlutterPlugin {
 
     private final String PROVIDER_AUTH_EXT = ".fileprovider.github.com/orgs/esysberlin/esys-flutter-share";
     private Registrar _registrar;
+    private FlutterPluginBinding _binding;
 
     private EsysFlutterSharePlugin(Registrar registrar) {
         this._registrar = registrar;
+    }
+
+    private EsysFlutterSharePlugin(FlutterPluginBinding binding) {
+        this._binding = binding;
     }
 
     /**
@@ -57,7 +64,13 @@ public class EsysFlutterSharePlugin implements MethodCallHandler {
         String text = argsMap.get("text");
         String mimeType = argsMap.get("mimeType");
 
-        Context activeContext = _registrar.activeContext();
+        Context activeContext;
+
+        if (_registrar != null) {
+            activeContext = _registrar.activeContext();
+        } else {
+            activeContext = _binding.getApplicationContext();
+        }
 
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType(mimeType);
@@ -73,7 +86,13 @@ public class EsysFlutterSharePlugin implements MethodCallHandler {
         String mimeType = argsMap.get("mimeType");
         String text = argsMap.get("text");
 
-        Context activeContext = _registrar.activeContext();
+        Context activeContext;
+
+        if (_registrar != null) {
+            activeContext = _registrar.activeContext();
+        } else {
+            activeContext = _binding.getApplicationContext();
+        }
 
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType(mimeType);
@@ -96,7 +115,13 @@ public class EsysFlutterSharePlugin implements MethodCallHandler {
         String mimeType = (String) argsMap.get("mimeType");
         String text = (String) argsMap.get("text");
 
-        Context activeContext = _registrar.activeContext();
+        Context activeContext;
+
+        if (_registrar != null) {
+            activeContext = _registrar.activeContext();
+        } else {
+            activeContext = _binding.getApplicationContext();
+        }
 
         Intent shareIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
         shareIntent.setType(mimeType);
@@ -113,5 +138,16 @@ public class EsysFlutterSharePlugin implements MethodCallHandler {
         // add optional text
         if (!text.isEmpty()) shareIntent.putExtra(Intent.EXTRA_TEXT, text);
         activeContext.startActivity(Intent.createChooser(shareIntent, title));
+    }
+
+    @Override
+    public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
+        final MethodChannel channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "channel:github.com/orgs/esysberlin/esys-flutter-share");
+        channel.setMethodCallHandler(new EsysFlutterSharePlugin(flutterPluginBinding));
+    }
+
+    @Override
+    public void onDetachedFromEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
+
     }
 }
