@@ -97,7 +97,7 @@ public class EsysFlutterSharePlugin implements MethodCallHandler, FlutterPlugin,
         String name = argsMap.get("name");
         String mimeType = argsMap.get("mimeType");
         String text = argsMap.get("text");
-        
+
 
         Context activeContext = null;
 
