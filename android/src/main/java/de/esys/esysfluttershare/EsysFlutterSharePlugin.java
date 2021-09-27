@@ -28,7 +28,7 @@ public class EsysFlutterSharePlugin implements MethodCallHandler, FlutterPlugin 
     private Registrar _registrar;
     private FlutterPluginBinding _binding;
 
-    private EsysFlutterSharePlugin() {
+    public EsysFlutterSharePlugin() {
     }
 
     private EsysFlutterSharePlugin(Registrar registrar) {
