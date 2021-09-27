@@ -76,16 +76,15 @@ public class EsysFlutterSharePlugin implements MethodCallHandler, FlutterPlugin,
 
         if (_registrar != null) {
             activeContext = _registrar.activeContext();
-        } else {
-            if (_activity != null){
-                activeContext = _activity.getApplicationContext();
-            }
         }
 
-        if (activeContext != null) {
+
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType(mimeType);
             shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+        if (_activity != null) {
+            _activity.startActivity(Intent.createChooser(shareIntent, title));
+        } else if (activeContext != null) {
             activeContext.startActivity(Intent.createChooser(shareIntent, title));
         }
     }
@@ -103,13 +102,9 @@ public class EsysFlutterSharePlugin implements MethodCallHandler, FlutterPlugin,
 
         if (_registrar != null) {
             activeContext = _registrar.activeContext();
-        } else {
-            if (_activity != null){
-                activeContext = _activity.getApplicationContext();
-            }
         }
 
-        if (activeContext != null) {
+
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType(mimeType);
             File file = new File(activeContext.getCacheDir(), name);
@@ -118,6 +113,9 @@ public class EsysFlutterSharePlugin implements MethodCallHandler, FlutterPlugin,
             shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
             // add optional text
             if (!text.isEmpty()) shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+        if (_activity != null){
+            _activity.startActivity(Intent.createChooser(shareIntent, title));
+        }  else if (activeContext != null) {
             activeContext.startActivity(Intent.createChooser(shareIntent, title));
         }
     }
@@ -136,13 +134,9 @@ public class EsysFlutterSharePlugin implements MethodCallHandler, FlutterPlugin,
 
         if (_registrar != null) {
             activeContext = _registrar.activeContext();
-        } else {
-            if (_activity != null){
-                activeContext = _activity.getApplicationContext();
-            }
         }
 
-        if (activeContext != null) {
+
             Intent shareIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
             shareIntent.setType(mimeType);
 
@@ -157,8 +151,11 @@ public class EsysFlutterSharePlugin implements MethodCallHandler, FlutterPlugin,
             shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, contentUris);
             // add optional text
             if (!text.isEmpty()) shareIntent.putExtra(Intent.EXTRA_TEXT, text);
-            activeContext.startActivity(Intent.createChooser(shareIntent, title));
-        }
+            if (_activity != null) {
+                _activity.startActivity(Intent.createChooser(shareIntent, title));
+            } else if (activeContext != null){
+                activeContext.startActivity(Intent.createChooser(shareIntent, title));
+            }
     }
 
     @Override
